@@ -96,7 +96,7 @@ namespace panwave {
         }
 
         size_t GetWaveletLevelCount() const {
-            return std::pow(2, this->_height - 1);
+            return static_cast<size_t>(std::pow(2, this->_height - 1));
         }
     };
 }; // namespace panwave
