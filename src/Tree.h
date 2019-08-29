@@ -42,7 +42,7 @@ namespace panwave {
         Tree(size_t height) : _height(height) {
             assert(height != 0);
 
-            this->_leaf_count = std::pow(k, height - 1);
+            this->_leaf_count = static_cast<size_t>(std::pow(k, height - 1));
             size_t total_nodes = (k * this->_leaf_count - 1) / (k - 1);
 
             this->_nodes.resize(total_nodes);
