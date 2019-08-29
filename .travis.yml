@@ -1,0 +1,17 @@
+language: cpp
+
+script: cd ./out && cmake .. && make && ./panwave_test
+
+dist: trusty
+
+matrix:
+  include:
+  - os: linux
+    compiler: clang
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-6.0
+        packages:
+          - libstdc++-7-dev
