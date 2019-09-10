@@ -5,6 +5,8 @@
 
 #include <cassert>
 #include <vector>
+#include <algorithm>
+#include <functional>
 
 #include "StationaryWaveletPacketTree.h"
 #include "Wavelet.h"
@@ -121,13 +123,10 @@ void StationaryWaveletPacketTree::ReconstructAccumulate(size_t leaf_node, std::v
     this->SetMark(leaf_node);
 
     this->ReconstructNode(0);
-    const std::vector<double>* root_signal = this->GetRootSignal();
 
-    assert(root_signal->size() == accumulated_signal->size());
+    assert(this->GetRootSignal()->size() == accumulated_signal->size());
 
-    for (size_t i = 0; i < root_signal->size(); i++) {
-        accumulated_signal->operator[](i) += root_signal->operator[](i);
-    }
+    std::transform(accumulated_signal->cbegin(), accumulated_signal->cend(), this->GetRootSignal()->cbegin(), accumulated_signal->begin(), std::plus<double>());
 }
 
 void StationaryWaveletPacketTree::Reconstruct(size_t level) {

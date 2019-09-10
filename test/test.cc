@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <cassert>
+#include <algorithm>
 #include <cstring>
 #include <sstream>
 
@@ -47,12 +48,7 @@ void TestWPT(WaveletPacketTreeBase* tree, size_t height, const std::vector<doubl
 
     for (size_t i = 0; i < tree->GetWaveletLevelCount(); i++) {
         tree->Reconstruct(i);
-
-        const std::vector<double>* root_signal = tree->GetRootSignal();
-
-        for (size_t j = 0; j < root_signal->size(); j++) {
-            reconstructed_signal[j] += root_signal->operator[](j);
-        }
+        std::transform(reconstructed_signal.cbegin(), reconstructed_signal.cend(), tree->GetRootSignal()->cbegin(), reconstructed_signal.begin(), std::plus<double>());
     }
 
     if (verify) {
