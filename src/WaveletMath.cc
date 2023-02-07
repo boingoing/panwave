@@ -3,11 +3,13 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include <cassert>
-
 #include "WaveletMath.h"
 
-using namespace panwave;
+#include "Wavelet.h"
+
+#include <cassert>
+
+namespace panwave {
 
 void WaveletMath::Pad(const std::vector<double>* data,
                       std::vector<double>* extended_data,
@@ -61,7 +63,7 @@ void WaveletMath::Convolve(const std::vector<double>* data,
     assert(coeffs);
     assert(result);
     assert(data->size() >= coeffs->size());
-    assert(coeffs->size() > 0);
+    assert(!coeffs->empty());
 
     result->resize(data->size() - (coeffs->size() - 1));
 
@@ -84,9 +86,7 @@ void WaveletMath::DyadicDownsample(const std::vector<double>* data,
 
     data_downsampled->clear();
 
-    size_t i = dyadic_mode == DyadicMode::Even ? 0 : 1;
-
-    for (; i < data->size(); i+=2) {
+    for (size_t i = dyadic_mode == DyadicMode::Even ? 0 : 1; i < data->size(); i += 2) {
         data_downsampled->push_back(data->operator[](i));
     }
 }
@@ -95,18 +95,17 @@ void WaveletMath::DyadicUpsample(const std::vector<double>* data,
                                  std::vector<double>* data_upsampled,
                                  DyadicMode dyadic_mode) {
     assert(data);
-    assert(data->size() > 0);
+    assert(!data->empty());
     assert(data_upsampled);
 
-    size_t j = 0;
-    size_t i = dyadic_mode == DyadicMode::Even ? 1 : 0;
+    size_t source_index = 0;
     size_t new_size = data->size() * 2 + (dyadic_mode == DyadicMode::Even ? 1 : -1);
 
     data_upsampled->clear();
     data_upsampled->resize(new_size);
 
-    for (; i < data_upsampled->size(); i += 2) {
-        data_upsampled->operator[](i) = data->operator[](j++);
+    for (size_t i = dyadic_mode == DyadicMode::Even ? 1 : 0; i < data_upsampled->size(); i += 2) {
+        data_upsampled->operator[](i) = data->operator[](source_index++);
     }
 }
 
@@ -128,8 +127,8 @@ void WaveletMath::Decompose(const std::vector<double>* data,
 
     Pad(data, &data_padded, wavelet->Length() - 1, wavelet->Length() - 1, padding_mode);
 
-    Convolve(&data_padded, &wavelet->LowpassDecompositionFilter, &low_pass_data);
-    Convolve(&data_padded, &wavelet->HighpassDecompositionFilter, &high_pass_data);
+    Convolve(&data_padded, &wavelet->lowpassDecompositionFilter_, &low_pass_data);
+    Convolve(&data_padded, &wavelet->highpassDecompositionFilter_, &high_pass_data);
 
     DyadicDownsample(&low_pass_data, approx_coeffs, dyadic_mode);
     DyadicDownsample(&high_pass_data, details_coeffs, dyadic_mode);
@@ -162,3 +161,5 @@ void WaveletMath::Reconstruct(const std::vector<double>* coeffs,
     auto begin = data_wide.cbegin() + wavelet->Length() - dyad_shift;
     data->assign(begin, begin + data_size);
 }
+
+}  // namespace panwave

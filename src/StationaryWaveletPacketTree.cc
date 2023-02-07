@@ -3,22 +3,31 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include <cassert>
-#include <vector>
-#include <algorithm>
-#include <functional>
-
 #include "StationaryWaveletPacketTree.h"
 #include "Wavelet.h"
 #include "WaveletMath.h"
 
-using namespace panwave;
+#include <algorithm>
+#include <cassert>
+#include <functional>
+#include <vector>
+
+namespace {
+
+constexpr size_t ChildIndexNorthWest = 0;
+constexpr size_t ChildIndexNorthEast = 1;
+constexpr size_t ChildIndexSouthWest = 2;
+constexpr size_t ChildIndexSouthEast = 3;
+
+}  // namespace
+
+namespace panwave {
 
 StationaryWaveletPacketTree::StationaryWaveletPacketTree(size_t height,
                                                          const Wavelet* wavelet,
                                                          PaddingMode padding_mode) :
     WaveletPacketTreeTemplateBase(height, wavelet),
-    _padding_mode(padding_mode) {
+    padding_mode_(padding_mode) {
 }
 
 void StationaryWaveletPacketTree::Decompose() {
@@ -26,92 +35,88 @@ void StationaryWaveletPacketTree::Decompose() {
 }
 
 void StationaryWaveletPacketTree::DecomposeNode(size_t node) {
-    assert(node < this->_nodes.size());
-
     if (this->IsLeaf(node)) {
         return;
     }
 
-    size_t nw = this->GetChild(node, 0);
-    size_t ne = this->GetChild(node, 1);
-    size_t sw = this->GetChild(node, 2);
-    size_t se = this->GetChild(node, 3);
+    const size_t nw_child = this->GetChild(node, ChildIndexNorthWest);
+    const size_t ne_child = this->GetChild(node, ChildIndexNorthEast);
+    const size_t sw_child = this->GetChild(node, ChildIndexSouthWest);
+    const size_t se_child = this->GetChild(node, ChildIndexSouthEast);
 
-    WaveletMath::Decompose(&this->_nodes[node].signal,
-                           this->_wavelet,
-                           &this->_nodes[nw].signal,
-                           &this->_nodes[sw].signal,
+    WaveletMath::Decompose(&this->GetNodeData(node).signal,
+                           this->wavelet_,
+                           &this->GetNodeData(nw_child).signal,
+                           &this->GetNodeData(sw_child).signal,
                            DyadicMode::Even,
-                           this->_padding_mode);
+                           this->padding_mode_);
 
-    WaveletMath::Decompose(&this->_nodes[node].signal,
-                           this->_wavelet,
-                           &this->_nodes[ne].signal,
-                           &this->_nodes[se].signal,
+    WaveletMath::Decompose(&this->GetNodeData(node).signal,
+                           this->wavelet_,
+                           &this->GetNodeData(ne_child).signal,
+                           &this->GetNodeData(se_child).signal,
                            DyadicMode::Odd,
-                           this->_padding_mode);
+                           this->padding_mode_);
 
-    this->DecomposeNode(nw);
-    this->DecomposeNode(ne);
-    this->DecomposeNode(sw);
-    this->DecomposeNode(se);
+    this->DecomposeNode(nw_child);
+    this->DecomposeNode(ne_child);
+    this->DecomposeNode(sw_child);
+    this->DecomposeNode(se_child);
 }
 
 void StationaryWaveletPacketTree::ReconstructNode(size_t node) {
-    assert(node < this->_nodes.size());
-
     if (this->IsLeaf(node)) {
         return;
     }
 
-    size_t nw = this->GetChild(node, 0);
-    size_t ne = this->GetChild(node, 1);
-    size_t sw = this->GetChild(node, 2);
-    size_t se = this->GetChild(node, 3);
+    const size_t nw_child = this->GetChild(node, ChildIndexNorthWest);
+    const size_t ne_child = this->GetChild(node, ChildIndexNorthEast);
+    const size_t sw_child = this->GetChild(node, ChildIndexSouthWest);
+    const size_t se_child = this->GetChild(node, ChildIndexSouthEast);
 
-    ReconstructNode(nw);
-    ReconstructNode(ne);
-    ReconstructNode(sw);
-    ReconstructNode(se);
+    ReconstructNode(nw_child);
+    ReconstructNode(ne_child);
+    ReconstructNode(sw_child);
+    ReconstructNode(se_child);
 
     DyadicMode dyad_mode = DyadicMode::Even;
     const std::vector<double>* child_signal = nullptr;
     const std::vector<double>* reconstruction_filter = nullptr;
 
-    if (this->IsMarked(nw)) {
-        assert(!this->IsMarked(sw) && !this->IsMarked(ne) && !this->IsMarked(se));
+    if (this->IsMarked(nw_child)) {
+        assert(!this->IsMarked(sw_child) && !this->IsMarked(ne_child) && !this->IsMarked(se_child));
         dyad_mode = DyadicMode::Even;
-        child_signal = &this->_nodes[nw].signal;
-        reconstruction_filter = &this->_wavelet->LowpassReconstructionFilter;
+        child_signal = &this->GetNodeData(nw_child).signal;
+        reconstruction_filter = &this->wavelet_->lowpassReconstructionFilter_;
         this->SetMark(node);
-    } else if (this->IsMarked(sw)) {
-        assert(!this->IsMarked(nw) && !this->IsMarked(ne) && !this->IsMarked(se));
+    } else if (this->IsMarked(sw_child)) {
+        assert(!this->IsMarked(nw_child) && !this->IsMarked(ne_child) && !this->IsMarked(se_child));
         dyad_mode = DyadicMode::Even;
-        child_signal = &this->_nodes[sw].signal;
-        reconstruction_filter = &this->_wavelet->HighpassReconstructionFilter;
+        child_signal = &this->GetNodeData(sw_child).signal;
+        reconstruction_filter = &this->wavelet_->highpassReconstructionFilter_;
         this->SetMark(node);
-    } else if (this->IsMarked(ne)) {
-        assert(!this->IsMarked(sw) && !this->IsMarked(nw) && !this->IsMarked(se));
+    } else if (this->IsMarked(ne_child)) {
+        assert(!this->IsMarked(sw_child) && !this->IsMarked(nw_child) && !this->IsMarked(se_child));
         dyad_mode = DyadicMode::Odd;
-        child_signal = &this->_nodes[ne].signal;
-        reconstruction_filter = &this->_wavelet->LowpassReconstructionFilter;
+        child_signal = &this->GetNodeData(ne_child).signal;
+        reconstruction_filter = &this->wavelet_->lowpassReconstructionFilter_;
         this->SetMark(node);
-    } else if (this->IsMarked(se)) {
-        assert(!this->IsMarked(sw) && !this->IsMarked(ne) && !this->IsMarked(nw));
+    } else if (this->IsMarked(se_child)) {
+        assert(!this->IsMarked(sw_child) && !this->IsMarked(ne_child) && !this->IsMarked(nw_child));
         dyad_mode = DyadicMode::Odd;
-        child_signal = &this->_nodes[se].signal;
-        reconstruction_filter = &this->_wavelet->HighpassReconstructionFilter;
+        child_signal = &this->GetNodeData(se_child).signal;
+        reconstruction_filter = &this->wavelet_->highpassReconstructionFilter_;
         this->SetMark(node);
     }
 
     if (child_signal != nullptr) {
         WaveletMath::Reconstruct(child_signal,
                                  reconstruction_filter,
-                                 &this->_nodes[node].signal,
-                                 this->_wavelet,
-                                 this->_nodes[node].signal.size(),
+                                 &this->GetNodeData(node).signal,
+                                 this->wavelet_,
+                                 this->GetNodeData(node).signal.size(),
                                  dyad_mode,
-                                 this->_padding_mode);
+                                 this->padding_mode_);
     }
 }
 
@@ -126,30 +131,30 @@ void StationaryWaveletPacketTree::ReconstructAccumulate(size_t leaf_node, std::v
 
     assert(this->GetRootSignal()->size() == accumulated_signal->size());
 
-    std::transform(accumulated_signal->cbegin(), accumulated_signal->cend(), this->GetRootSignal()->cbegin(), accumulated_signal->begin(), std::plus<double>());
+    std::transform(accumulated_signal->cbegin(), accumulated_signal->cend(), this->GetRootSignal()->cbegin(), accumulated_signal->begin(), std::plus<>());
 }
 
 void StationaryWaveletPacketTree::Reconstruct(size_t level) {
     // If height is 1, we only have the root node so there's nothing to reconstruct.
-    if (this->_height == 1) {
+    if (this->GetHeight() == 1) {
         return;
     }
 
-    size_t leaf_count = this->GetLeafCount();
-    size_t level_count = this->GetWaveletLevelCount();
-    size_t first_leaf_index = this->GetFirstLeaf();
+    const size_t leaf_count = this->GetLeafCount();
+    const size_t level_count = this->GetWaveletLevelCount();
+    const size_t first_leaf_index = this->GetFirstLeaf();
 
     assert(level < level_count);
 
     std::vector<double> reconstructed_signal;
-    reconstructed_signal.resize(this->_nodes[0].signal.size());
+    reconstructed_signal.resize(this->GetRootSignal()->size());
 
     // First calculate the starting leaf index for the level.
     size_t starting_leaf = 0;
     size_t current_leaf_count = 4;
     size_t current_level_count = 2;
     while (current_leaf_count <= leaf_count) {
-        size_t remainder = level % current_level_count;
+        const size_t remainder = level % current_level_count;
 
         if (remainder >= current_level_count / 2) {
             starting_leaf += current_leaf_count / 2;
@@ -167,12 +172,12 @@ void StationaryWaveletPacketTree::Reconstruct(size_t level) {
 
         while (level_index != 0) {
             // Least significant bit is set.
-            if (level_index & 0x1) {
+            if ((level_index & 0x1U) != 0U) {
                 current_leaf += current_multiplier;
             }
 
             // Shift to next most significant bit.
-            level_index = level_index >> 1;
+            level_index = level_index >> 1U;
             // Increase multiplier to next power of 4;
             current_multiplier *= 4;
         }
@@ -184,9 +189,11 @@ void StationaryWaveletPacketTree::Reconstruct(size_t level) {
         this->ReconstructAccumulate(first_leaf_index + current_leaf + 1, &reconstructed_signal);
     }
 
-    for (size_t i = 0; i < reconstructed_signal.size(); i++) {
-        reconstructed_signal[i] /= level_count;
+    for (double& it : reconstructed_signal) {
+        it /= level_count;
     }
 
     this->SetRootSignal(&reconstructed_signal);
 }
+
+}  // namespace panwave

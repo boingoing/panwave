@@ -3,60 +3,67 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#pragma once
+#ifndef WAVELETPACKETTREE_H
+#define WAVELETPACKETTREE_H
 
-#include <vector>
-
-#include "Tree.h"
-#include "Wavelet.h"
 #include "WaveletMath.h"
-#include "WaveletPacketTreeBase.h"
+#include "WaveletPacketTreeTemplateBase.h"
 
 namespace panwave {
+
+class Wavelet;
+
+/**
+ * A conventional wavelet packet tree class.<br/>
+ * This is a binary tree, each non-leaf node has two children.<br/>
+ * During decomposition, each node is decomposed into details and
+ * approximation coefficients. The approximation coefficients are stored in
+ * the left (0th) child while the details coefficients are stored in the
+ * right (1st) child.
+ */
+class WaveletPacketTree : public WaveletPacketTreeTemplateBase<2> {
+public:
     /**
-     * A conventional wavelet packet tree class.<br/>
-     * This is a binary tree, each non-leaf node has two children.<br/>
-     * During decomposition, each node is decomposed into details and
-     * approximation coefficients. The approximation coefficients are stored in
-     * the left (0th) child while the details coefficients are stored in the
-     * right (1st) child.
+     * Construct a WaveletPacketTree instance.<br/>
+     * Root signal is initially unset. Set it before calling Decompose.
+     * @param height Height of the tree. A tree with only one root node
+     *               has height of 1.
+     * @param wavelet Wavelet object used during decomposition /
+     *                reconstruction.
+     * @param dyadic_mode Which mode we should use when dyadically
+     *                    upsampling / downsampling when performing
+     *                    convolutions. (default: Odd)
+     * @param padding_mode How we should pad the signal data during
+     *                     decomposition / reconstruction. (default: Zeroes)
+     * @see Wavelet
+     * @see Decompose
+     * @see Reconstruct
      */
-    class WaveletPacketTree : public WaveletPacketTreeTemplateBase<2> {
-    protected:
-        DyadicMode _dyadic_mode;
-        PaddingMode _padding_mode;
+    WaveletPacketTree(size_t height,
+                    const Wavelet* wavelet,
+                    DyadicMode dyadic_mode = DyadicMode::Odd,
+                    PaddingMode padding_mode = PaddingMode::Zeroes);
 
-    public:
-        /**
-         * Construct a WaveletPacketTree instance.<br/>
-         * Root signal is initially unset. Set it before calling Decompose.
-         * @param height Height of the tree. A tree with only one root node
-         *               has height of 1.
-         * @param wavelet Wavelet object used during decomposition /
-         *                reconstruction.
-         * @param dyadic_mode Which mode we should use when dyadically
-         *                    upsampling / downsampling when performing
-         *                    convolutions. (default: Odd)
-         * @param padding_mode How we should pad the signal data during
-         *                     decomposition / reconstruction. (default: Zeroes)
-         * @see Wavelet
-         * @see Decompose
-         * @see Reconstruct
-         */
-        WaveletPacketTree(size_t height,
-                          const Wavelet* wavelet,
-                          DyadicMode dyadic_mode = DyadicMode::Odd,
-                          PaddingMode padding_mode = PaddingMode::Zeroes);
+    WaveletPacketTree(const WaveletPacketTree&) = delete;
+    WaveletPacketTree(const WaveletPacketTree&&) = delete;
+    WaveletPacketTree& operator=(const WaveletPacketTree&) = delete;
+    WaveletPacketTree& operator=(const WaveletPacketTree&&) = delete;
+    ~WaveletPacketTree() = default;
 
-        void Decompose();
-        void Reconstruct(size_t level);
+    void Decompose() override;
+    void Reconstruct(size_t level) override;
 
-    protected:
-        WaveletPacketTree(const WaveletPacketTree&);
+protected:
+    void IsolateLevel(size_t level);
 
-        void IsolateLevel(size_t level);
+    void DecomposeNode(size_t node);
+    void ReconstructNode(size_t node);
 
-        void DecomposeNode(size_t node);
-        void ReconstructNode(size_t node);
-    };
-}; // namespace panwave
+private:
+    DyadicMode dyadic_mode_;
+    PaddingMode padding_mode_;
+};
+
+}  // namespace panwave
+
+#endif  // WAVELETPACKETTREE_H

@@ -3,21 +3,29 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include <cassert>
-#include <cmath>
-
 #include "WaveletPacketTree.h"
-#include "WaveletPacketTreeBase.h"
 
-using namespace panwave;
+#include "Wavelet.h"
+#include "WaveletPacketTreeTemplateBase.h"
+
+#include <cassert>
+
+namespace {
+
+constexpr size_t ChildIndexLeft = 0;
+constexpr size_t ChildIndexRight = 1;
+
+}  // namespace
+
+namespace panwave {
 
 WaveletPacketTree::WaveletPacketTree(size_t height,
                                      const Wavelet* wavelet,
                                      DyadicMode dyadic_mode,
                                      PaddingMode padding_mode) :
     WaveletPacketTreeTemplateBase(height, wavelet),
-    _dyadic_mode(dyadic_mode),
-    _padding_mode(padding_mode) {
+    dyadic_mode_(dyadic_mode),
+    padding_mode_(padding_mode) {
 }
 
 void WaveletPacketTree::Decompose() {
@@ -44,35 +52,31 @@ void WaveletPacketTree::IsolateLevel(size_t level) {
 }
 
 void WaveletPacketTree::DecomposeNode(size_t node) {
-    assert(node < this->_nodes.size());
-
     if (this->IsLeaf(node)) {
         return;
     }
 
-    size_t left = this->GetChild(node, 0);
-    size_t right = this->GetChild(node, 1);
+    const size_t left = this->GetChild(node, ChildIndexLeft);
+    const size_t right = this->GetChild(node, ChildIndexRight);
 
-    WaveletMath::Decompose(&this->_nodes[node].signal,
-                           this->_wavelet,
-                           &this->_nodes[left].signal,
-                           &this->_nodes[right].signal,
-                           this->_dyadic_mode,
-                           this->_padding_mode);
+    WaveletMath::Decompose(&this->GetNodeData(node).signal,
+                           this->wavelet_,
+                           &this->GetNodeData(left).signal,
+                           &this->GetNodeData(right).signal,
+                           this->dyadic_mode_,
+                           this->padding_mode_);
 
     this->DecomposeNode(left);
     this->DecomposeNode(right);
 }
 
 void WaveletPacketTree::ReconstructNode(size_t node) {
-    assert(node < this->_nodes.size());
-
     if (this->IsLeaf(node)) {
         return;
     }
 
-    size_t left = this->GetChild(node, 0);
-    size_t right = this->GetChild(node, 1);
+    const size_t left = this->GetChild(node, ChildIndexLeft);
+    const size_t right = this->GetChild(node, ChildIndexRight);
 
     ReconstructNode(left);
     ReconstructNode(right);
@@ -82,23 +86,25 @@ void WaveletPacketTree::ReconstructNode(size_t node) {
 
     if (this->IsMarked(left)) {
         assert(!this->IsMarked(right));
-        child_signal = &this->_nodes[left].signal;
-        reconstruction_filter = &this->_wavelet->LowpassReconstructionFilter;
+        child_signal = &this->GetNodeData(left).signal;
+        reconstruction_filter = &this->wavelet_->lowpassReconstructionFilter_;
         this->SetMark(node);
     } else if (this->IsMarked(right)) {
         assert(!this->IsMarked(left));
-        child_signal = &this->_nodes[right].signal;
-        reconstruction_filter = &this->_wavelet->HighpassReconstructionFilter;
+        child_signal = &this->GetNodeData(right).signal;
+        reconstruction_filter = &this->wavelet_->highpassReconstructionFilter_;
         this->SetMark(node);
     }
 
     if (child_signal != nullptr) {
         WaveletMath::Reconstruct(child_signal,
                                  reconstruction_filter,
-                                 &this->_nodes[node].signal,
-                                 this->_wavelet,
-                                 this->_nodes[node].signal.size(),
-                                 this->_dyadic_mode,
-                                 this->_padding_mode);
+                                 &this->GetNodeData(node).signal,
+                                 this->wavelet_,
+                                 this->GetNodeData(node).signal.size(),
+                                 this->dyadic_mode_,
+                                 this->padding_mode_);
     }
 }
+
+}  // namespace panwave
