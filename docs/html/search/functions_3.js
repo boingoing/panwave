@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['isleaf',['IsLeaf',['../classpanwave_1_1Tree.html#a6ca3a9ab7dc9d443e5f3b76f506c907a',1,'panwave::Tree']]],
-  ['ismarked',['IsMarked',['../classpanwave_1_1Tree.html#a375c157773a4811a9023faae6bfcbc05',1,'panwave::Tree']]]
+  ['isleaf_63',['IsLeaf',['../classpanwave_1_1Tree.html#a946589023bfb1953b3ed21c815a4f6b2',1,'panwave::Tree']]],
+  ['ismarked_64',['IsMarked',['../classpanwave_1_1Tree.html#adbcda73f2fdbd795a65a3482d147afe1',1,'panwave::Tree']]]
 ];
