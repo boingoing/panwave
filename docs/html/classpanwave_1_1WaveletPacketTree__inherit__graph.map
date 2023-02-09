@@ -1,5 +1,6 @@
 <map id="panwave::WaveletPacketTree" name="panwave::WaveletPacketTree">
-<area shape="rect" id="node2" href="$classpanwave_1_1WaveletPacketTreeTemplateBase.html" title="panwave::WaveletPacketTree\lTemplateBase\&lt; 2 \&gt;" alt="" coords="142,95,354,136"/>
-<area shape="rect" id="node3" href="$classpanwave_1_1Tree.html" title="panwave::Tree\&lt; WaveletPacket\lTreeNodeData, k \&gt;" alt="" coords="5,5,232,47"/>
-<area shape="rect" id="node4" href="$classpanwave_1_1WaveletPacketTreeBase.html" title="panwave::WaveletPacketTreeBase" alt="" coords="257,13,501,39"/>
+<area shape="rect" id="node1" title=" " alt="" coords="557,53,768,80"/>
+<area shape="rect" id="node2" href="$classpanwave_1_1WaveletPacketTreeTemplateBase.html" title=" " alt="" coords="299,46,509,87"/>
+<area shape="rect" id="node3" href="$classpanwave_1_1Tree.html" title=" " alt="" coords="5,5,251,61"/>
+<area shape="rect" id="node4" href="$classpanwave_1_1WaveletPacketTreeBase.html" title=" " alt="" coords="7,85,249,112"/>
 </map>

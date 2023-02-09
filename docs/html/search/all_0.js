@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['convolve',['Convolve',['../classpanwave_1_1WaveletMath.html#ad8d4453d5f2f7c9561ace51bcbde5204',1,'panwave::WaveletMath']]]
+  ['convolve_0',['Convolve',['../classpanwave_1_1WaveletMath.html#a1af3f4a97f58f636e01ababca7cadfe2',1,'panwave::WaveletMath']]]
 ];
