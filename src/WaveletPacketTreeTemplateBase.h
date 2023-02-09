@@ -33,7 +33,7 @@ class WaveletPacketTreeTemplateBase
     data.signal.assign(signal->cbegin(), signal->cend());
   }
 
-  const std::vector<double>* GetRootSignal() const override {
+  const std::vector<double>* GetRootSignal() override {
     return &this->GetNodeData(0).signal;
   }
 
