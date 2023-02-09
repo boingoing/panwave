@@ -44,13 +44,6 @@ class StationaryWaveletPacketTree : public WaveletPacketTreeTemplateBase<4> {
    */
   StationaryWaveletPacketTree(size_t height, const Wavelet* wavelet,
                               PaddingMode padding_mode = PaddingMode::Zeroes);
-
-  StationaryWaveletPacketTree(const StationaryWaveletPacketTree&) = delete;
-  StationaryWaveletPacketTree(const StationaryWaveletPacketTree&&) = delete;
-  StationaryWaveletPacketTree& operator=(const StationaryWaveletPacketTree&) =
-      delete;
-  StationaryWaveletPacketTree& operator=(const StationaryWaveletPacketTree&&) =
-      delete;
   ~StationaryWaveletPacketTree() override = default;
 
   void Decompose() override;

@@ -13,7 +13,9 @@ namespace {
 
 // Coefficient Source: http://disp.ee.ntu.edu.tw/tutorial/WaveletTutorial.pdf
 
-constexpr std::initializer_list<double>
+// TODO(boingoing): Ideally these initializer_lists should be marked constexpr
+// but this doesn't seem to work in MSVC.
+const std::initializer_list<double>
     daubechiesLowpassDecompositionCoefficients[] = {
         {},
         {},
@@ -47,7 +49,7 @@ constexpr std::initializer_list<double>
          0.281172344,  0.688459039,  0.527201189,  0.1881768,    0.026670058},
 };
 
-constexpr std::initializer_list<double>
+const std::initializer_list<double>
     daubechiesHighpassDecompositionCoefficients[] = {
         {},
         {},
@@ -81,7 +83,7 @@ constexpr std::initializer_list<double>
          0.001992405,  0.000685857, -0.000116467, -9.36E-05,    -1.33E-05},
 };
 
-constexpr std::initializer_list<double>
+const std::initializer_list<double>
     daubechiesLowpassReconstructionCoefficients[] = {
         {},
         {},
@@ -114,7 +116,7 @@ constexpr std::initializer_list<double>
          0.001992405,  -0.000685857, -0.000116467, 9.36E-05,     -1.33E-05},
 };
 
-constexpr std::initializer_list<double>
+const std::initializer_list<double>
     daubechiesHighpassReconstructionCoefficients[] = {
         {},
         {},
@@ -148,24 +150,22 @@ constexpr std::initializer_list<double>
          -0.281172344, 0.688459039,  -0.527201189, 0.1881768,   -0.026670058},
 };
 
-constexpr std::initializer_list<double>
-    symletLowpassDecompositionCoefficients[] = {
-        {},
-        {},
-        {-0.129409523, 0.224143868, 0.836516304, 0.482962913},
-        {0.035226292, -0.085441274, -0.13501102, 0.459877502, 0.806891509,
-         0.332670553},
-        {-0.075765714789273, -0.029635527645999, 0.497618667632015,
-         0.803738751805916, 0.297857795605277, -0.099219543576847,
-         -0.012603967262038, 0.032223100604043},
-        {0.027333068345078, 0.029519490925775, -0.039134249302383,
-         0.199397533977394, 0.723407690402421, 0.633978963458212,
-         0.016602105764522, -0.175328089908450, -0.021101834024759,
-         0.019538882735287},
+const std::initializer_list<double> symletLowpassDecompositionCoefficients[] = {
+    {},
+    {},
+    {-0.129409523, 0.224143868, 0.836516304, 0.482962913},
+    {0.035226292, -0.085441274, -0.13501102, 0.459877502, 0.806891509,
+     0.332670553},
+    {-0.075765714789273, -0.029635527645999, 0.497618667632015,
+     0.803738751805916, 0.297857795605277, -0.099219543576847,
+     -0.012603967262038, 0.032223100604043},
+    {0.027333068345078, 0.029519490925775, -0.039134249302383,
+     0.199397533977394, 0.723407690402421, 0.633978963458212, 0.016602105764522,
+     -0.175328089908450, -0.021101834024759, 0.019538882735287},
 };
 
-constexpr std::initializer_list<double>
-    symletHighpassDecompositionCoefficients[] = {
+const std::initializer_list<double> symletHighpassDecompositionCoefficients[] =
+    {
         {},
         {},
         {-0.482962913, 0.836516304, -0.224143868, -0.129409523},
@@ -180,8 +180,8 @@ constexpr std::initializer_list<double>
          0.027333068345078},
 };
 
-constexpr std::initializer_list<double>
-    symletLowpassReconstructionCoefficients[] = {
+const std::initializer_list<double> symletLowpassReconstructionCoefficients[] =
+    {
         {},
         {},
         {0.482962913, 0.836516304, 0.224143868, -0.129409523},
@@ -196,8 +196,8 @@ constexpr std::initializer_list<double>
          0.027333068345078},
 };
 
-constexpr std::initializer_list<double>
-    symletHighpassReconstructionCoefficients[] = {
+const std::initializer_list<double> symletHighpassReconstructionCoefficients[] =
+    {
         {},
         {},
         {-0.129409523, -0.224143868, 0.836516304, -0.482962913},
@@ -212,8 +212,8 @@ constexpr std::initializer_list<double>
          -0.019538882735287},
 };
 
-constexpr std::initializer_list<double>
-    coifletLowpassDecompositionCoefficients[] = {
+const std::initializer_list<double> coifletLowpassDecompositionCoefficients[] =
+    {
         {},
         {-0.015655728, -0.07273262, 0.384864847, 0.85257202, 0.337897662,
          -0.07273262},
@@ -237,8 +237,8 @@ constexpr std::initializer_list<double>
          -0.010131118, -0.004159359, 0.002178236,  0.00035859,   -0.000212081},
 };
 
-constexpr std::initializer_list<double>
-    coifletHighpassDecompositionCoefficients[] = {
+const std::initializer_list<double> coifletHighpassDecompositionCoefficients[] =
+    {
         {},
         {0.07273262, 0.337897662, -0.85257202, 0.384864847, 0.07273262,
          -0.015655728},
@@ -262,8 +262,8 @@ constexpr std::initializer_list<double>
          -2.13E-05,    -3.73E-06,    2.06E-06,     1.67E-07,     -9.52E-08},
 };
 
-constexpr std::initializer_list<double>
-    coifletLowpassReconstructionCoefficients[] = {
+const std::initializer_list<double> coifletLowpassReconstructionCoefficients[] =
+    {
         {},
         {-0.07273262, 0.337897662, 0.85257202, 0.384864847, -0.07273262,
          -0.015655728},
@@ -287,7 +287,7 @@ constexpr std::initializer_list<double>
          -2.13E-05,    3.73E-06,    2.06E-06,     -1.67E-07,    -9.52E-08},
 };
 
-constexpr std::initializer_list<double>
+const std::initializer_list<double>
     coifletHighpassReconstructionCoefficients[] = {
         {},
         {-0.015655728, 0.07273262, 0.384864847, -0.85257202, 0.337897662,
