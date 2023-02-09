@@ -20,6 +20,14 @@ namespace panwave {
  */
 class WaveletPacketTreeBase {
  public:
+  WaveletPacketTreeBase(const WaveletPacketTreeBase&) = delete;
+  WaveletPacketTreeBase(const WaveletPacketTreeBase&&) = delete;
+  WaveletPacketTreeBase& operator=(const WaveletPacketTreeBase&) = delete;
+  WaveletPacketTreeBase& operator=(const WaveletPacketTreeBase&&) = delete;
+
+  WaveletPacketTreeBase() = default;
+  virtual ~WaveletPacketTreeBase() = default;
+
   /**
    * This struct is just a container used to hold the signal data for each
    * node in the wavelet packet tree.

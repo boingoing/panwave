@@ -138,7 +138,7 @@ struct DyadicTest {
     DyadicMode mode_;
 };
 
-constexpr DyadicTest dyadicUpTests[] = {
+const DyadicTest dyadicUpTests[] = {
     {{1,2,3,4,5,6,7,8,9,10}, {0,1,0,2,0,3,0,4,0,5,0,6,0,7,0,8,0,9,0,10,0}, DyadicMode::Even},
     {{1,2,3,4,5,6,7,8,9,10}, {1,0,2,0,3,0,4,0,5,0,6,0,7,0,8,0,9,0,10}, DyadicMode::Odd},
     {{1,2,3,4,5,6,7,8,9}, {1,0,2,0,3,0,4,0,5,0,6,0,7,0,8,0,9},DyadicMode::Odd},
@@ -149,7 +149,7 @@ constexpr DyadicTest dyadicUpTests[] = {
     {{1}, {1},DyadicMode::Odd},
 };
 
-constexpr DyadicTest dyadicDownTests[] = {
+const DyadicTest dyadicDownTests[] = {
     {{1,2,3,4,5,6,7,8,9}, {2,4,6,8}, DyadicMode::Odd},
     {{1,2,3,4,5,6,7,8,9}, {1,3,5,7,9}, DyadicMode::Even},
     {{1,2,3,4,5,6,7,8,9,10}, {2,4,6,8,10}, DyadicMode::Odd},
@@ -164,7 +164,7 @@ struct PadTest {
     PaddingMode mode_;
 };
 
-constexpr PadTest padTests[] = {
+const PadTest padTests[] = {
     {{1,2,3,4,5}, {5,5,5,4,3,2,1,2,3,4,5,4,3,2,1,1,1}, 6, 6, PaddingMode::Symmetric},
     {{1,2,3,4,5}, {5,5,4,3,2,1,2,3,4,5,4,3,2,1,1}, 5, 5, PaddingMode::Symmetric},
     {{1,2,3,4,5}, {0,0,0,0,0,0,1,2,3,4,5,0,0,0,0,0,0}, 6, 6, PaddingMode::Zeroes},
@@ -180,15 +180,15 @@ void DoTests() {
     constexpr size_t max_test_height = 10;
     TestWavelets(max_test_height, &signal);
 
-    for (auto test : dyadicUpTests) {
+    for (const DyadicTest& test : dyadicUpTests) {
         TestDyadicUp(test.signal_, test.expected_, test.mode_);
     }
 
-    for (auto test: dyadicDownTests) {
+    for (const DyadicTest& test : dyadicDownTests) {
         TestDyadicDown(test.signal_, test.expected_, test.mode_);
     }
 
-    for (auto test : padTests) {
+    for (const PadTest& test : padTests) {
         TestPad(test.data_, test.expected_, test.left_, test.right_, test.mode_);
     }
 }

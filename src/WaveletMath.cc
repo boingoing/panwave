@@ -88,7 +88,7 @@ void WaveletMath::DyadicDownsample(const std::vector<double>* data,
 
   data_downsampled->clear();
 
-  for (size_t i = dyadic_mode == DyadicMode::Even ? 0 : 1; i < data->size();
+  for (size_t i = dyadic_mode == DyadicMode::Even ? 0U : 1U; i < data->size();
        i += 2) {
     data_downsampled->push_back(data->operator[](i));
   }
@@ -108,7 +108,7 @@ void WaveletMath::DyadicUpsample(const std::vector<double>* data,
   data_upsampled->clear();
   data_upsampled->resize(new_size);
 
-  for (size_t i = dyadic_mode == DyadicMode::Even ? 1 : 0;
+  for (size_t i = dyadic_mode == DyadicMode::Even ? 1U : 0U;
        i < data_upsampled->size(); i += 2) {
     data_upsampled->operator[](i) = data->operator[](source_index++);
   }
@@ -161,9 +161,9 @@ void WaveletMath::Reconstruct(const std::vector<double>* coeffs,
       wavelet->Length() - 1, padding_mode);
   Convolve(&upsampled_coeffs_padded, reconstruction_coeffs, &data_wide);
 
-  size_t dyad_shift = dyadic_mode == DyadicMode::Even ? 0 : 2;
+  size_t dyad_shift = dyadic_mode == DyadicMode::Even ? 0U : 2U;
   data->resize(data_size);
-  auto begin = data_wide.cbegin() + wavelet->Length() - dyad_shift;
+  auto begin = data_wide.cbegin() + (wavelet->Length() - dyad_shift);
   data->assign(begin, begin + data_size);
 }
 

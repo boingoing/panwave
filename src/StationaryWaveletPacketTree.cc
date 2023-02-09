@@ -192,7 +192,7 @@ void StationaryWaveletPacketTree::Reconstruct(size_t level) {
   }
 
   for (double& it : reconstructed_signal) {
-    it /= level_count;
+    it /= static_cast<double>(level_count);
   }
 
   this->SetRootSignal(&reconstructed_signal);

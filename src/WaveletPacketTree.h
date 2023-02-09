@@ -48,7 +48,7 @@ class WaveletPacketTree : public WaveletPacketTreeTemplateBase<2> {
   WaveletPacketTree(const WaveletPacketTree&&) = delete;
   WaveletPacketTree& operator=(const WaveletPacketTree&) = delete;
   WaveletPacketTree& operator=(const WaveletPacketTree&&) = delete;
-  ~WaveletPacketTree() = default;
+  ~WaveletPacketTree() override = default;
 
   void Decompose() override;
   void Reconstruct(size_t level) override;

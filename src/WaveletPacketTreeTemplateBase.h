@@ -24,7 +24,7 @@ class WaveletPacketTreeTemplateBase
       public WaveletPacketTreeBase {
  public:
   WaveletPacketTreeTemplateBase(size_t height, const Wavelet* wavelet)
-      : Tree<WaveletPacketTreeNodeData, k>(height), wavelet_(wavelet) {}
+      : Tree<WaveletPacketTreeNodeData, k>(height), WaveletPacketTreeBase(), wavelet_(wavelet) {}
 
   void SetRootSignal(const std::vector<double>* signal) override {
     assert(signal);

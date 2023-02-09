@@ -51,7 +51,7 @@ class StationaryWaveletPacketTree : public WaveletPacketTreeTemplateBase<4> {
       delete;
   StationaryWaveletPacketTree& operator=(const StationaryWaveletPacketTree&&) =
       delete;
-  ~StationaryWaveletPacketTree() = default;
+  ~StationaryWaveletPacketTree() override = default;
 
   void Decompose() override;
   void Reconstruct(size_t level) override;
