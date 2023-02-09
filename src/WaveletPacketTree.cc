@@ -83,18 +83,19 @@ void WaveletPacketTree::ReconstructNode(size_t node) {
     assert(!this->IsMarked(right));
     child_signal = &this->GetNodeData(left).signal;
     reconstruction_filter = &this->wavelet_->lowpassReconstructionFilter_;
-    this->SetMark(node);
   } else if (this->IsMarked(right)) {
     assert(!this->IsMarked(left));
     child_signal = &this->GetNodeData(right).signal;
     reconstruction_filter = &this->wavelet_->highpassReconstructionFilter_;
-    this->SetMark(node);
   }
 
   if (child_signal != nullptr) {
+    this->SetMark(node);
+
+    auto& data = this->GetNodeData(node);
     WaveletMath::Reconstruct(child_signal, reconstruction_filter,
-                             &this->GetNodeData(node).signal, this->wavelet_,
-                             this->GetNodeData(node).signal.size(),
+                             &data.signal, this->wavelet_,
+                             data.signal.size(),
                              this->dyadic_mode_, this->padding_mode_);
   }
 }

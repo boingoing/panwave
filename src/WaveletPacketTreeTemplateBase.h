@@ -29,7 +29,7 @@ class WaveletPacketTreeTemplateBase
   void SetRootSignal(const std::vector<double>* signal) override {
     assert(signal);
 
-    auto data = this->GetNodeData(0);
+    auto& data = this->GetNodeData(0);
     data.signal.assign(signal->cbegin(), signal->cend());
   }
 

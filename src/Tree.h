@@ -100,10 +100,13 @@ class Tree {
     return (child - 1) / k;
   }
 
+  /**
+   * Get the writable data stored at tree node |index|.
+   */
   Element& GetNodeData(size_t index) {
     assert(index < this->nodes_.size());
 
-    return this->nodes_[index];
+    return this->nodes_.at(index);
   }
 
   /**

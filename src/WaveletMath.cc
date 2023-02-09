@@ -102,7 +102,7 @@ void WaveletMath::DyadicUpsample(const std::vector<double>* data,
   assert(data_upsampled);
 
   size_t source_index = 0;
-  size_t new_size =
+  const size_t new_size =
       data->size() * 2 + (dyadic_mode == DyadicMode::Even ? 1 : -1);
 
   data_upsampled->clear();
@@ -161,8 +161,7 @@ void WaveletMath::Reconstruct(const std::vector<double>* coeffs,
       wavelet->Length() - 1, padding_mode);
   Convolve(&upsampled_coeffs_padded, reconstruction_coeffs, &data_wide);
 
-  size_t dyad_shift = dyadic_mode == DyadicMode::Even ? 0U : 2U;
-  data->resize(data_size);
+  const size_t dyad_shift = dyadic_mode == DyadicMode::Even ? 0U : 2U;
   auto begin = data_wide.cbegin() + (wavelet->Length() - dyad_shift);
   data->assign(begin, begin + data_size);
 }

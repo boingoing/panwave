@@ -83,34 +83,33 @@ void StationaryWaveletPacketTree::ReconstructNode(size_t node) {
     dyad_mode = DyadicMode::Even;
     child_signal = &this->GetNodeData(nw_child).signal;
     reconstruction_filter = &this->wavelet_->lowpassReconstructionFilter_;
-    this->SetMark(node);
   } else if (this->IsMarked(sw_child)) {
     assert(!this->IsMarked(nw_child) && !this->IsMarked(ne_child) &&
            !this->IsMarked(se_child));
     dyad_mode = DyadicMode::Even;
     child_signal = &this->GetNodeData(sw_child).signal;
     reconstruction_filter = &this->wavelet_->highpassReconstructionFilter_;
-    this->SetMark(node);
   } else if (this->IsMarked(ne_child)) {
     assert(!this->IsMarked(sw_child) && !this->IsMarked(nw_child) &&
            !this->IsMarked(se_child));
     dyad_mode = DyadicMode::Odd;
     child_signal = &this->GetNodeData(ne_child).signal;
     reconstruction_filter = &this->wavelet_->lowpassReconstructionFilter_;
-    this->SetMark(node);
   } else if (this->IsMarked(se_child)) {
     assert(!this->IsMarked(sw_child) && !this->IsMarked(ne_child) &&
            !this->IsMarked(nw_child));
     dyad_mode = DyadicMode::Odd;
     child_signal = &this->GetNodeData(se_child).signal;
     reconstruction_filter = &this->wavelet_->highpassReconstructionFilter_;
-    this->SetMark(node);
   }
 
   if (child_signal != nullptr) {
+    this->SetMark(node);
+
+    auto& data = this->GetNodeData(node);
     WaveletMath::Reconstruct(child_signal, reconstruction_filter,
-                             &this->GetNodeData(node).signal, this->wavelet_,
-                             this->GetNodeData(node).signal.size(), dyad_mode,
+                             &data.signal, this->wavelet_,
+                             data.signal.size(), dyad_mode,
                              this->padding_mode_);
   }
 }

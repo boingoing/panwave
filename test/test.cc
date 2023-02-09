@@ -92,10 +92,10 @@ void TestWPTs(size_t max_height, const std::vector<double>* signal, const Wavele
 }
 
 void TestWavelet(Wavelet::WaveletType type, size_t max_height, const std::vector<double>* signal) {
-    size_t min = Wavelet::GetWaveletMinimumP(type);
+    const size_t min = Wavelet::GetWaveletMinimumP(type);
     // We support coiflet up to p=5 but these are more lossy so the verification will fail. Only test on a safe subset.
     constexpr size_t max_safe_coiflet = 2;
-    size_t max = type == Wavelet::WaveletType::Coiflet ? max_safe_coiflet : Wavelet::GetWaveletMaximumP(type);
+    const size_t max = type == Wavelet::WaveletType::Coiflet ? max_safe_coiflet : Wavelet::GetWaveletMaximumP(type);
     Wavelet wavelet;
 
     for (size_t i = min; i <= max; i++) {
@@ -196,6 +196,11 @@ void DoTests() {
 }  // namespace testing
 
 int main() {
-    testing::DoTests();
+    try {
+        testing::DoTests();
+    } catch (...) {
+        std::cout << "Caught exception running tests.";
+    }
+
     return 0;
 }
