@@ -107,9 +107,8 @@ void StationaryWaveletPacketTree::ReconstructNode(size_t node) {
     this->SetMark(node);
 
     auto& data = this->GetNodeData(node);
-    WaveletMath::Reconstruct(child_signal, reconstruction_filter,
-                             &data.signal, this->wavelet_,
-                             data.signal.size(), dyad_mode,
+    WaveletMath::Reconstruct(child_signal, reconstruction_filter, &data.signal,
+                             this->wavelet_, data.signal.size(), dyad_mode,
                              this->padding_mode_);
   }
 }
