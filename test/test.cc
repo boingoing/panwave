@@ -208,12 +208,13 @@ const PadTest padTests[] = {
 };
 
 void DoTests() {
-  std::vector<double> signal;
   constexpr size_t signal_size = 500;
-  signal.resize(signal_size);
-  for (size_t i = 0; i < signal.size(); i++) {
-    signal[i] = i;
+  std::vector<double> signal(signal_size);
+  double val = 1.0;
+  for (double& it : signal) {
+    it = val++;
   }
+
   constexpr size_t max_test_height = 10;
   TestWavelets(max_test_height, &signal);
 

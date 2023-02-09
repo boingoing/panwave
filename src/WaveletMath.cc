@@ -6,6 +6,7 @@
 
 #include "WaveletMath.h"
 
+#include <algorithm>
 #include <cassert>
 
 #include "Wavelet.h"
@@ -163,7 +164,8 @@ void WaveletMath::Reconstruct(const std::vector<double>* coeffs,
 
   const size_t dyad_shift = dyadic_mode == DyadicMode::Even ? 0U : 2U;
   auto begin = data_wide.cbegin() + (wavelet->Length() - dyad_shift);
-  data->assign(begin, begin + data_size);
+  data->resize(data_size);
+  std::copy_n(begin, data_size, data->begin());
 }
 
 }  // namespace panwave

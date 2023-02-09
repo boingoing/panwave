@@ -43,11 +43,6 @@ class WaveletPacketTree : public WaveletPacketTreeTemplateBase<2> {
   WaveletPacketTree(size_t height, const Wavelet* wavelet,
                     DyadicMode dyadic_mode = DyadicMode::Odd,
                     PaddingMode padding_mode = PaddingMode::Zeroes);
-
-  WaveletPacketTree(const WaveletPacketTree&) = delete;
-  WaveletPacketTree(const WaveletPacketTree&&) = delete;
-  WaveletPacketTree& operator=(const WaveletPacketTree&) = delete;
-  WaveletPacketTree& operator=(const WaveletPacketTree&&) = delete;
   ~WaveletPacketTree() override = default;
 
   void Decompose() override;
