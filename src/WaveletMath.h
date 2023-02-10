@@ -11,10 +11,6 @@
 #include <vector>
 
 namespace panwave {
-class Wavelet;
-}  // namespace panwave
-
-namespace panwave {
 
 /**
  * The mode used when dyadically upsampling or downsampling.
