@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <cassert>
 
-#include "Wavelet.h"
-
 namespace panwave {
 
 void WaveletMath::Pad(const std::vector<double>* data,

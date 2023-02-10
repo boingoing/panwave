@@ -13,6 +13,9 @@
 #include "WaveletPacketTreeBase.h"
 
 namespace panwave {
+
+class Wavelet;
+
 /**
  * A templated base class from which specialized wavelet packet tree
  * implementations can derive.<br/>
