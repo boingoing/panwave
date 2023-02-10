@@ -23,13 +23,6 @@ class Wavelet {
   enum class WaveletType : uint8_t { Daubechies = 1, Symlet, Coiflet };
 
   /**
-   * The length of the wavelet. This is equivalent to the length of each
-   * wavelet filter. We expect all wavelet filters to be of the same
-   * length.
-   */
-  size_t Length() const;
-
-  /**
    * Load the wavelet filter coefficients for a well-known wavelet.
    * @param wavelet Destination wavelet instance. Filter coefficients will be
    *                overwritten with well-known values.
