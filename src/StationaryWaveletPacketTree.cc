@@ -42,12 +42,16 @@ void StationaryWaveletPacketTree::DecomposeNode(size_t node) {
   const size_t sw_child = this->GetChild(node, ChildIndexSouthWest);
   const size_t se_child = this->GetChild(node, ChildIndexSouthEast);
 
-  WaveletMath::Decompose(&this->GetNodeData(node).signal, this->wavelet_,
+  WaveletMath::Decompose(&this->GetNodeData(node).signal,
+                         &this->wavelet_->lowpassDecompositionFilter_,
+                         &this->wavelet_->highpassDecompositionFilter_,
                          &this->GetNodeData(nw_child).signal,
                          &this->GetNodeData(sw_child).signal, DyadicMode::Even,
                          this->padding_mode_);
 
-  WaveletMath::Decompose(&this->GetNodeData(node).signal, this->wavelet_,
+  WaveletMath::Decompose(&this->GetNodeData(node).signal,
+                         &this->wavelet_->lowpassDecompositionFilter_,
+                         &this->wavelet_->highpassDecompositionFilter_,
                          &this->GetNodeData(ne_child).signal,
                          &this->GetNodeData(se_child).signal, DyadicMode::Odd,
                          this->padding_mode_);
@@ -108,7 +112,7 @@ void StationaryWaveletPacketTree::ReconstructNode(size_t node) {
 
     auto& data = this->GetNodeData(node);
     WaveletMath::Reconstruct(child_signal, reconstruction_filter, &data.signal,
-                             this->wavelet_, data.signal.size(), dyad_mode,
+                             data.signal.size(), dyad_mode,
                              this->padding_mode_);
   }
 }

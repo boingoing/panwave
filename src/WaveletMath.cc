@@ -116,26 +116,28 @@ void WaveletMath::DyadicUpsample(const std::vector<double>* data,
 }
 
 void WaveletMath::Decompose(const std::vector<double>* data,
-                            const Wavelet* wavelet,
+                            const std::vector<double>* lowpass_filter_coeffs,
+                            const std::vector<double>* highpass_filter_coeffs,
                             std::vector<double>* approx_coeffs,
                             std::vector<double>* details_coeffs,
                             DyadicMode dyadic_mode, PaddingMode padding_mode) {
   assert(data);
   assert(approx_coeffs);
   assert(details_coeffs);
-  assert(wavelet);
-  assert(wavelet->Length() > 0);
+  assert(lowpass_filter_coeffs);
+  assert(highpass_filter_coeffs);
+  assert(lowpass_filter_coeffs->size() == highpass_filter_coeffs->size());
+  assert(!lowpass_filter_coeffs->empty());
 
   std::vector<double> data_padded;
   std::vector<double> low_pass_data;
   std::vector<double> high_pass_data;
+  const auto filter_size = lowpass_filter_coeffs->size();
 
-  Pad(data, &data_padded, wavelet->Length() - 1, wavelet->Length() - 1,
-      padding_mode);
+  Pad(data, &data_padded, filter_size - 1, filter_size - 1, padding_mode);
 
-  Convolve(&data_padded, &wavelet->lowpassDecompositionFilter_, &low_pass_data);
-  Convolve(&data_padded, &wavelet->highpassDecompositionFilter_,
-           &high_pass_data);
+  Convolve(&data_padded, lowpass_filter_coeffs, &low_pass_data);
+  Convolve(&data_padded, highpass_filter_coeffs, &high_pass_data);
 
   DyadicDownsample(&low_pass_data, approx_coeffs, dyadic_mode);
   DyadicDownsample(&high_pass_data, details_coeffs, dyadic_mode);
@@ -143,27 +145,26 @@ void WaveletMath::Decompose(const std::vector<double>* data,
 
 void WaveletMath::Reconstruct(const std::vector<double>* coeffs,
                               const std::vector<double>* reconstruction_coeffs,
-                              std::vector<double>* data, const Wavelet* wavelet,
-                              size_t data_size, DyadicMode dyadic_mode,
+                              std::vector<double>* data, size_t data_size,
+                              DyadicMode dyadic_mode,
                               PaddingMode padding_mode) {
   assert(coeffs);
-  assert(reconstruction_coeffs);
   assert(data);
-  assert(wavelet);
-  assert(wavelet->Length() > 2);
-  assert(wavelet->Length() == reconstruction_coeffs->size());
+  assert(reconstruction_coeffs);
+  assert(reconstruction_coeffs->size() > 2);
 
   std::vector<double> upsampled_coeffs;
   std::vector<double> upsampled_coeffs_padded;
   std::vector<double> data_wide;
+  const auto filter_size = reconstruction_coeffs->size();
 
   DyadicUpsample(coeffs, &upsampled_coeffs, dyadic_mode);
-  Pad(&upsampled_coeffs, &upsampled_coeffs_padded, wavelet->Length() - 1,
-      wavelet->Length() - 1, padding_mode);
+  Pad(&upsampled_coeffs, &upsampled_coeffs_padded, filter_size - 1,
+      filter_size - 1, padding_mode);
   Convolve(&upsampled_coeffs_padded, reconstruction_coeffs, &data_wide);
 
   const size_t dyad_shift = dyadic_mode == DyadicMode::Even ? 0U : 2U;
-  auto begin = data_wide.cbegin() + (wavelet->Length() - dyad_shift);
+  auto begin = data_wide.cbegin() + (filter_size - dyad_shift);
   data->resize(data_size);
   std::copy_n(begin, data_size, data->begin());
 }

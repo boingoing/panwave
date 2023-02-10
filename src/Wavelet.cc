@@ -416,15 +416,4 @@ void Wavelet::GetWaveletCoefficients(Wavelet* wavelet, WaveletType type,
   }
 }
 
-size_t Wavelet::Length() const {
-  assert(this->highpassDecompositionFilter_.size() ==
-         this->highpassReconstructionFilter_.size());
-  assert(this->highpassDecompositionFilter_.size() ==
-         this->lowpassDecompositionFilter_.size());
-  assert(this->highpassDecompositionFilter_.size() ==
-         this->lowpassReconstructionFilter_.size());
-
-  return this->highpassDecompositionFilter_.size();
-}
-
 }  // namespace panwave

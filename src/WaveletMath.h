@@ -44,8 +44,9 @@ class WaveletMath {
    * Decompose a signal into approximation and details coefficients.<br/>
    * Uses wavelet to get the decomposition highpass and lowpass filters.
    * @param data The signal data we wish to decompose.
-   * @param wavelet Wavelet we will use to get the highpass and lowpass
-   *                decomposition filters.
+   * @param lowpass_filter_coeffs The lowpass decomposition filter coefficients.
+   * @param highpass_filter_coeffs The highpass decomposition filter
+   * coefficients.
    * @param approx_coeffs Destination approximation coefficients. Any
    *                      existing contents will be overwritten.
    * @param details_coeffs Destination details coefficients. Any
@@ -55,10 +56,13 @@ class WaveletMath {
    * @param padding_mode Padding mode we should use when padding the
    *                     signal data. (Default: Zeroes)
    */
-  static void Decompose(const std::vector<double>* data, const Wavelet* wavelet,
+  static void Decompose(const std::vector<double>* data,
+                        const std::vector<double>* lowpass_filter_coeffs,
+                        const std::vector<double>* highpass_filter_coeffs,
                         std::vector<double>* approx_coeffs,
                         std::vector<double>* details_coeffs,
-                        DyadicMode dyadic_mode, PaddingMode padding_mode);
+                        DyadicMode dyadic_mode = DyadicMode::Odd,
+                        PaddingMode padding_mode = PaddingMode::Zeroes);
 
   /**
    * Reconstruct a signal from approximation or details coefficients.
@@ -69,7 +73,6 @@ class WaveletMath {
    *                              to the length of wavelet.
    * @param data Destination vector for the reconstructed signal. Any
    *             existing contents will be erased.
-   * @param wavelet Wavelet we used to do the decomposition.
    * @param data_size Size of the reconstructed signal.
    * @param dyadic_mode Mode we should use when dyadically upsampling.
    *                    (default: Odd)
@@ -78,9 +81,9 @@ class WaveletMath {
    */
   static void Reconstruct(const std::vector<double>* coeffs,
                           const std::vector<double>* reconstruction_coeffs,
-                          std::vector<double>* data, const Wavelet* wavelet,
-                          size_t data_size, DyadicMode dyadic_mode,
-                          PaddingMode padding_mode);
+                          std::vector<double>* data, size_t data_size,
+                          DyadicMode dyadic_mode = DyadicMode::Odd,
+                          PaddingMode padding_mode = PaddingMode::Zeroes);
 
   /**
    * Dyadically upsample a data signal.<br/>
