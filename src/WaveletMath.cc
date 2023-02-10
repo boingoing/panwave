@@ -149,8 +149,9 @@ void WaveletMath::Reconstruct(const std::vector<double>* coeffs,
                               DyadicMode dyadic_mode,
                               PaddingMode padding_mode) {
   assert(coeffs);
-  assert(reconstruction_coeffs);
   assert(data);
+  assert(reconstruction_coeffs);
+  assert(reconstruction_coeffs->size() > 2);
 
   std::vector<double> upsampled_coeffs;
   std::vector<double> upsampled_coeffs_padded;
