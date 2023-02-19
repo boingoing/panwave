@@ -15,4 +15,4 @@ matrix:
           - llvm-toolchain-focal-15
         packages:
           - libstdc++-7-dev
-          - clang-tidy-15
+          - clang-tidy
