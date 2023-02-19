@@ -1,8 +1,8 @@
 language: cpp
 
-script: cd ./out && cmake .. && make && ./panwave_test
+script: mkdir build && cd ./build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && ./panwave_test
 
-dist: trusty
+dist: focal
 
 matrix:
   include:
@@ -12,6 +12,7 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-6.0
+          - llvm-toolchain-focal-15
         packages:
           - libstdc++-7-dev
+          - clang-tidy-15
