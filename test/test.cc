@@ -27,28 +27,38 @@ using panwave::WaveletPacketTreeBase;
 
 namespace testing {
 
-void print(const std::vector<double>* vec) {
+void Print(const std::vector<double>* vec) {
   for (size_t i = 0; i < vec->size(); i++) {
     std::cout << vec->operator[](i) << ' ';
   }
 }
 
-void compare(const std::vector<double>* left,
+bool Compare(const std::vector<double>* left,
              const std::vector<double>* right) {
   if (left->size() != right->size()) {
     std::cout << "Failed size check. Expected: " << left->size()
               << " Actual: " << right->size() << std::endl;
+    return false;
   }
   constexpr double epsilon = 0.001;
   for (size_t i = 0; i < left->size(); i++) {
     if (fabs(left->operator[](i) - right->operator[](i)) > epsilon) {
       std::cout << "Failed vector values." << std::endl << "Expected: { ";
-      print(left);
+      Print(left);
       std::cout << " }" << std::endl << "Actual: { ";
-      print(right);
+      Print(right);
       std::cout << "}" << std::endl;
-      return;
+      return false;
     }
+  }
+  return true;
+}
+
+void Check(const std::vector<double>* left,
+           const std::vector<double>* right) {
+  if (!Compare(left, right)) {
+    std::cout << "FAIL" << std::endl;
+    exit(-1);
   }
 }
 
@@ -68,7 +78,7 @@ void TestWPT(WaveletPacketTreeBase* tree, const std::vector<double>* signal,
   }
 
   if (verify) {
-    compare(signal, &reconstructed_signal);
+    Check(signal, &reconstructed_signal);
   }
   std::cout << "Pass" << std::endl;
 }
@@ -132,21 +142,21 @@ void TestDyadicUp(const std::vector<double> signal,
                   const std::vector<double> expected, DyadicMode mode) {
   std::vector<double> actual;
   WaveletMath::DyadicUpsample(&signal, &actual, mode);
-  compare(&expected, &actual);
+  Check(&expected, &actual);
 }
 
 void TestDyadicDown(const std::vector<double> signal,
                     const std::vector<double> expected, DyadicMode mode) {
   std::vector<double> actual;
   WaveletMath::DyadicDownsample(&signal, &actual, mode);
-  compare(&expected, &actual);
+  Check(&expected, &actual);
 }
 
 void TestPad(const std::vector<double> data, const std::vector<double> expected,
              size_t left, size_t right, PaddingMode mode) {
   std::vector<double> actual;
   WaveletMath::Pad(&data, &actual, left, right, mode);
-  compare(&expected, &actual);
+  Check(&expected, &actual);
 }
 
 struct DyadicTest {
@@ -238,6 +248,7 @@ int main() {
     testing::DoTests();
   } catch (...) {
     std::cout << "Caught exception running tests.";
+    return -1;
   }
 
   return 0;
