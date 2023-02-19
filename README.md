@@ -59,7 +59,7 @@ The library ships with a simple test program in the `panwave/test` folder.
 
 ```console
 > git clone https://github.com/boingoing/panwave/panwave.git
-> mkdir build
+> mkdir panwave/build
 > cd panwave/build
 > cmake ..
 > make
