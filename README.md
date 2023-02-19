@@ -1,4 +1,4 @@
-[![main build status](https://app.travis-ci.com/boingoing/panwave.svg?branch=main)](https://travis-ci.com/boingoing/panwave/builds#)
+[![main build status](https://app.travis-ci.com/boingoing/panwave.svg?branch=main)](https://app.travis-ci.com/github/boingoing/panwave/builds)
 
 # panwave
 
