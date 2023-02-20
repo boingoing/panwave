@@ -22,9 +22,7 @@ void WaveletMath::Pad(const std::vector<double>* data,
 
   // First fill in the middle part of the extended data.
   // This is the existing content of data.
-  for (size_t i = 0; i < data->size(); i++) {
-    extended_data->operator[](pad_left + i) = data->operator[](i);
-  }
+  std::copy(data->cbegin(), data->cend(), extended_data->begin() + pad_left);
 
   if (padding_mode == PaddingMode::Symmetric) {
     size_t index = 0;
