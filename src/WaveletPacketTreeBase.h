@@ -64,13 +64,13 @@ class WaveletPacketTreeBase {
    * @param signal Values from signal are copied into the root node.
    * @see Decompose
    */
-  virtual void SetRootSignal(const std::vector<double>* signal) = 0;
+  virtual void SetRootSignal(const std::vector<double>& signal) = 0;
 
   /**
    * Get a read-only view of the root node signal data.
    * @see Reconstruct
    */
-  virtual const std::vector<double>* GetRootSignal() = 0;
+  virtual const std::vector<double>& GetRootSignal() = 0;
 
   /**
    * Get the number of wavelet levels this tree is capable of

@@ -127,10 +127,10 @@ void StationaryWaveletPacketTree::ReconstructAccumulate(
 
   this->ReconstructNode(0);
 
-  assert(this->GetRootSignal()->size() == accumulated_signal->size());
+  assert(this->GetRootSignal().size() == accumulated_signal->size());
 
   std::transform(accumulated_signal->cbegin(), accumulated_signal->cend(),
-                 this->GetRootSignal()->cbegin(), accumulated_signal->begin(),
+                 this->GetRootSignal().cbegin(), accumulated_signal->begin(),
                  std::plus<>());
 }
 
@@ -148,7 +148,7 @@ void StationaryWaveletPacketTree::Reconstruct(size_t level) {
   assert(level < level_count);
 
   std::vector<double> reconstructed_signal;
-  reconstructed_signal.resize(this->GetRootSignal()->size());
+  reconstructed_signal.resize(this->GetRootSignal().size());
 
   // First calculate the starting leaf index for the level.
   size_t starting_leaf = 0;
@@ -197,7 +197,7 @@ void StationaryWaveletPacketTree::Reconstruct(size_t level) {
     it /= static_cast<double>(level_count);
   }
 
-  this->SetRootSignal(&reconstructed_signal);
+  this->SetRootSignal(reconstructed_signal);
 }
 
 }  // namespace panwave
