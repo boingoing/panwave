@@ -1,7 +1,7 @@
 language: cpp
 
 script:
-- clang-format --dry-run --Werror ./src/* ./test/*
+- clang-format-12 --dry-run --Werror ./src/* ./test/*
 - mkdir build && cd ./build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && ./panwave_test
 
 dist: focal
