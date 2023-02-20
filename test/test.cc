@@ -61,28 +61,28 @@ void Check(const std::vector<double>* left, const std::vector<double>* right) {
   }
 }
 
-void TestWPT(WaveletPacketTreeBase* tree, const std::vector<double>* signal,
+void TestWPT(WaveletPacketTreeBase* tree, const std::vector<double>& signal,
              bool verify) {
   tree->SetRootSignal(signal);
   tree->Decompose();
 
   std::vector<double> reconstructed_signal;
-  reconstructed_signal.resize(signal->size());
+  reconstructed_signal.resize(signal.size());
 
   for (size_t i = 0; i < tree->GetWaveletLevelCount(); i++) {
     tree->Reconstruct(i);
     std::transform(reconstructed_signal.cbegin(), reconstructed_signal.cend(),
-                   tree->GetRootSignal()->cbegin(),
+                   tree->GetRootSignal().cbegin(),
                    reconstructed_signal.begin(), std::plus<>());
   }
 
   if (verify) {
-    Check(signal, &reconstructed_signal);
+    Check(&signal, &reconstructed_signal);
   }
   std::cout << "Pass" << std::endl;
 }
 
-void TestSWPT(size_t height, const std::vector<double>* signal,
+void TestSWPT(size_t height, const std::vector<double>& signal,
               const Wavelet* wavelet) {
   std::cout << "Testing StationaryWaveletPacketTree height = " << height
             << std::endl;
@@ -90,14 +90,14 @@ void TestSWPT(size_t height, const std::vector<double>* signal,
   TestWPT(&tree, signal, true);
 }
 
-void TestWPT(size_t height, const std::vector<double>* signal,
+void TestWPT(size_t height, const std::vector<double>& signal,
              const Wavelet* wavelet) {
   std::cout << "Testing WaveletPacketTree height = " << height << std::endl;
   WaveletPacketTree tree(height, wavelet);
   TestWPT(&tree, signal, true);
 }
 
-void TestWPTs(size_t max_height, const std::vector<double>* signal,
+void TestWPTs(size_t max_height, const std::vector<double>& signal,
               const Wavelet* wavelet) {
   for (size_t i = 0; i < max_height; i++) {
     TestWPT(i + 1, signal, wavelet);
@@ -111,7 +111,7 @@ void TestWPTs(size_t max_height, const std::vector<double>* signal,
 }
 
 void TestWavelet(Wavelet::WaveletType type, size_t max_height,
-                 const std::vector<double>* signal) {
+                 const std::vector<double>& signal) {
   const size_t min = Wavelet::GetWaveletMinimumP(type);
   // We support coiflet up to p=5 but these are more lossy so the verification
   // will fail. Only test on a safe subset.
@@ -128,7 +128,7 @@ void TestWavelet(Wavelet::WaveletType type, size_t max_height,
   }
 }
 
-void TestWavelets(size_t max_height, const std::vector<double>* signal) {
+void TestWavelets(size_t max_height, const std::vector<double>& signal) {
   std::cout << "Testing Daubechies" << std::endl;
   TestWavelet(Wavelet::WaveletType::Daubechies, max_height, signal);
   std::cout << "Testing Symlet" << std::endl;
@@ -225,7 +225,7 @@ void DoTests() {
   }
 
   constexpr size_t max_test_height = 10;
-  TestWavelets(max_test_height, &signal);
+  TestWavelets(max_test_height, signal);
 
   for (const DyadicTest& test : dyadicUpTests) {
     TestDyadicUp(test.signal_, test.expected_, test.mode_);

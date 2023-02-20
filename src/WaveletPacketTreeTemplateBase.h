@@ -31,15 +31,13 @@ class WaveletPacketTreeTemplateBase
         WaveletPacketTreeBase(),
         wavelet_(wavelet) {}
 
-  void SetRootSignal(const std::vector<double>* signal) override {
-    assert(signal);
-
+  void SetRootSignal(const std::vector<double>& signal) override {
     auto& data = this->GetNodeData(0);
-    data.signal.assign(signal->cbegin(), signal->cend());
+    data.signal.assign(signal.cbegin(), signal.cend());
   }
 
-  const std::vector<double>* GetRootSignal() override {
-    return &this->GetNodeData(0).signal;
+  const std::vector<double>& GetRootSignal() override {
+    return this->GetNodeData(0).signal;
   }
 
   size_t GetWaveletLevelCount() const override {
