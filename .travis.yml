@@ -18,4 +18,4 @@ matrix:
         packages:
           - libstdc++-7-dev
           - clang-tidy
-          - clang-format-15
+          - clang-format-12
