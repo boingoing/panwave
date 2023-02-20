@@ -54,8 +54,7 @@ bool Compare(const std::vector<double>* left,
   return true;
 }
 
-void Check(const std::vector<double>* left,
-           const std::vector<double>* right) {
+void Check(const std::vector<double>* left, const std::vector<double>* right) {
   if (!Compare(left, right)) {
     std::cout << "FAIL" << std::endl;
     exit(-1);
