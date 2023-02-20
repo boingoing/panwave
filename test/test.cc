@@ -72,8 +72,8 @@ void TestWPT(WaveletPacketTreeBase* tree, const std::vector<double>& signal,
   for (size_t i = 0; i < tree->GetWaveletLevelCount(); i++) {
     tree->Reconstruct(i);
     std::transform(reconstructed_signal.cbegin(), reconstructed_signal.cend(),
-                   tree->GetRootSignal().cbegin(),
-                   reconstructed_signal.begin(), std::plus<>());
+                   tree->GetRootSignal().cbegin(), reconstructed_signal.begin(),
+                   std::plus<>());
   }
 
   if (verify) {
