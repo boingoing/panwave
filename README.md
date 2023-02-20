@@ -24,16 +24,16 @@ Wavelet::GetWaveletCoefficients(&wavelet, Wavelet::WaveletType::Daubechies, 4);
 // Construct wavelet packet tree of height = 3.
 // This tree has 4 wavelet levels, and 4 leaves.
 WaveletPacketTree tree(3, &wavelet);
-tree.SetRootSignal(&signal);
+tree.SetRootSignal(signal);
 tree.Decompose();
 
 // Reconstruct signal one wavelet level at a time.
 for (size_t i = 0; i < tree.GetWaveletLevelCount(); i++) {
     tree.Reconstruct(i);
-    auto root_signal = tree.GetRootSignal();
+    auto& root_signal = tree.GetRootSignal();
     
     // Add the coefficients of wavelet level i to the reconstructed signal.
-    std::transform(reconstructed_signal.cbegin(), reconstructed_signal.cend(), root_signal->cbegin(), reconstructed_signal.begin(), std::plus<>());
+    std::transform(reconstructed_signal.cbegin(), reconstructed_signal.cend(), root_signal.cbegin(), reconstructed_signal.begin(), std::plus<>());
 }
 
 // signal == reconstructed_signal
