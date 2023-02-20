@@ -1,6 +1,8 @@
 language: cpp
 
-script: mkdir build && cd ./build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && ./panwave_test
+script:
+- clang-format --dry-run --Werror ./src/* ./test/*
+- mkdir build && cd ./build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && ./panwave_test
 
 dist: focal
 
@@ -16,3 +18,4 @@ matrix:
         packages:
           - libstdc++-7-dev
           - clang-tidy
+          - clang-format
