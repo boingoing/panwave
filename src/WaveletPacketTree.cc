@@ -95,9 +95,9 @@ void WaveletPacketTree::ReconstructNode(size_t node) {
     this->SetMark(node);
 
     auto& data = this->GetNodeData(node);
-    WaveletMath::Reconstruct(*child_signal, *reconstruction_filter, &data.signal,
-                             data.signal.size(), this->dyadic_mode_,
-                             this->padding_mode_);
+    WaveletMath::Reconstruct(*child_signal, *reconstruction_filter,
+                             &data.signal, data.signal.size(),
+                             this->dyadic_mode_, this->padding_mode_);
   }
 }
 

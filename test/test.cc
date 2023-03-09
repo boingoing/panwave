@@ -151,8 +151,9 @@ void TestDyadicDown(const std::vector<double>& signal,
   Check(&expected, &actual);
 }
 
-void TestPad(const std::vector<double>& data, const std::vector<double> expected,
-             size_t left, size_t right, PaddingMode mode) {
+void TestPad(const std::vector<double>& data,
+             const std::vector<double> expected, size_t left, size_t right,
+             PaddingMode mode) {
   std::vector<double> actual;
   WaveletMath::Pad(data, &actual, left, right, mode);
   Check(&expected, &actual);

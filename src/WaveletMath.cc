@@ -65,8 +65,7 @@ void WaveletMath::Convolve(const std::vector<double>& data,
     double val = 0.0;
 
     for (size_t j = 0; j < coeffs.size(); j++) {
-      val +=
-          data[i + j] * coeffs[coeffs.size() - j - 1];
+      val += data[i + j] * coeffs[coeffs.size() - j - 1];
     }
 
     result->operator[](i) = val;
