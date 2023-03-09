@@ -160,9 +160,9 @@ void TestPad(const std::vector<double>& data,
 }
 
 struct DyadicTest {
-  std::initializer_list<double> signal_;
-  std::initializer_list<double> expected_;
-  DyadicMode mode_;
+  std::initializer_list<double> signal;
+  std::initializer_list<double> expected;
+  DyadicMode mode;
 };
 
 const DyadicTest dyadicUpTests[] = {
@@ -192,11 +192,11 @@ const DyadicTest dyadicDownTests[] = {
 };
 
 struct PadTest {
-  std::initializer_list<double> data_;
-  std::initializer_list<double> expected_;
-  size_t left_;
-  size_t right_;
-  PaddingMode mode_;
+  std::initializer_list<double> data;
+  std::initializer_list<double> expected;
+  size_t left;
+  size_t right;
+  PaddingMode mode;
 };
 
 const PadTest padTests[] = {
@@ -229,15 +229,15 @@ void DoTests() {
   TestWavelets(max_test_height, signal);
 
   for (const DyadicTest& test : dyadicUpTests) {
-    TestDyadicUp(test.signal_, test.expected_, test.mode_);
+    TestDyadicUp(test.signal, test.expected, test.mode);
   }
 
   for (const DyadicTest& test : dyadicDownTests) {
-    TestDyadicDown(test.signal_, test.expected_, test.mode_);
+    TestDyadicDown(test.signal, test.expected, test.mode);
   }
 
   for (const PadTest& test : padTests) {
-    TestPad(test.data_, test.expected_, test.left_, test.right_, test.mode_);
+    TestPad(test.data, test.expected, test.left, test.right, test.mode);
   }
 }
 
