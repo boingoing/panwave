@@ -137,24 +137,24 @@ void TestWavelets(size_t max_height, const std::vector<double>& signal) {
   TestWavelet(Wavelet::WaveletType::Coiflet, max_height, signal);
 }
 
-void TestDyadicUp(const std::vector<double> signal,
+void TestDyadicUp(const std::vector<double>& signal,
                   const std::vector<double> expected, DyadicMode mode) {
   std::vector<double> actual;
-  WaveletMath::DyadicUpsample(&signal, &actual, mode);
+  WaveletMath::DyadicUpsample(signal, &actual, mode);
   Check(&expected, &actual);
 }
 
-void TestDyadicDown(const std::vector<double> signal,
+void TestDyadicDown(const std::vector<double>& signal,
                     const std::vector<double> expected, DyadicMode mode) {
   std::vector<double> actual;
-  WaveletMath::DyadicDownsample(&signal, &actual, mode);
+  WaveletMath::DyadicDownsample(signal, &actual, mode);
   Check(&expected, &actual);
 }
 
-void TestPad(const std::vector<double> data, const std::vector<double> expected,
+void TestPad(const std::vector<double>& data, const std::vector<double> expected,
              size_t left, size_t right, PaddingMode mode) {
   std::vector<double> actual;
-  WaveletMath::Pad(&data, &actual, left, right, mode);
+  WaveletMath::Pad(data, &actual, left, right, mode);
   Check(&expected, &actual);
 }
 
