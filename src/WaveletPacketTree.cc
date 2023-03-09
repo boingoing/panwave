@@ -56,9 +56,9 @@ void WaveletPacketTree::DecomposeNode(size_t node) {
   const size_t left = this->GetChild(node, ChildIndexLeft);
   const size_t right = this->GetChild(node, ChildIndexRight);
 
-  WaveletMath::Decompose(&this->GetNodeData(node).signal,
-                         &this->wavelet_->lowpassDecompositionFilter_,
-                         &this->wavelet_->highpassDecompositionFilter_,
+  WaveletMath::Decompose(this->GetNodeData(node).signal,
+                         this->wavelet_->lowpassDecompositionFilter_,
+                         this->wavelet_->highpassDecompositionFilter_,
                          &this->GetNodeData(left).signal,
                          &this->GetNodeData(right).signal, this->dyadic_mode_,
                          this->padding_mode_);
@@ -95,9 +95,9 @@ void WaveletPacketTree::ReconstructNode(size_t node) {
     this->SetMark(node);
 
     auto& data = this->GetNodeData(node);
-    WaveletMath::Reconstruct(child_signal, reconstruction_filter, &data.signal,
-                             data.signal.size(), this->dyadic_mode_,
-                             this->padding_mode_);
+    WaveletMath::Reconstruct(*child_signal, *reconstruction_filter,
+                             &data.signal, data.signal.size(),
+                             this->dyadic_mode_, this->padding_mode_);
   }
 }
 

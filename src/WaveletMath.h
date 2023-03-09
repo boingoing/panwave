@@ -52,9 +52,9 @@ class WaveletMath {
    * @param padding_mode Padding mode we should use when padding the
    *                     signal data. (Default: Zeroes)
    */
-  static void Decompose(const std::vector<double>* data,
-                        const std::vector<double>* lowpass_filter_coeffs,
-                        const std::vector<double>* highpass_filter_coeffs,
+  static void Decompose(const std::vector<double>& data,
+                        const std::vector<double>& lowpass_filter_coeffs,
+                        const std::vector<double>& highpass_filter_coeffs,
                         std::vector<double>* approx_coeffs,
                         std::vector<double>* details_coeffs,
                         DyadicMode dyadic_mode = DyadicMode::Odd,
@@ -75,8 +75,8 @@ class WaveletMath {
    * @param padding_mode Padding mode we should use when padding the
    *                     coefficient data. (Default: Zeroes)
    */
-  static void Reconstruct(const std::vector<double>* coeffs,
-                          const std::vector<double>* reconstruction_coeffs,
+  static void Reconstruct(const std::vector<double>& coeffs,
+                          const std::vector<double>& reconstruction_coeffs,
                           std::vector<double>* data, size_t data_size,
                           DyadicMode dyadic_mode = DyadicMode::Odd,
                           PaddingMode padding_mode = PaddingMode::Zeroes);
@@ -99,7 +99,7 @@ class WaveletMath {
    *                    (default: Odd)
    * @see DyadicMode
    */
-  static void DyadicUpsample(const std::vector<double>* data,
+  static void DyadicUpsample(const std::vector<double>& data,
                              std::vector<double>* data_upsampled,
                              DyadicMode dyadic_mode);
 
@@ -122,7 +122,7 @@ class WaveletMath {
    *                    (default: Odd)
    * @see DyadicMode
    */
-  static void DyadicDownsample(const std::vector<double>* data,
+  static void DyadicDownsample(const std::vector<double>& data,
                                std::vector<double>* data_downsampled,
                                DyadicMode dyadic_mode);
 
@@ -133,8 +133,8 @@ class WaveletMath {
    * @param result The destination for our convolved signal data. Any
    *               values in the vector will be overwritten.
    */
-  static void Convolve(const std::vector<double>* data,
-                       const std::vector<double>* coeffs,
+  static void Convolve(const std::vector<double>& data,
+                       const std::vector<double>& coeffs,
                        std::vector<double>* result);
 
   /**
@@ -160,7 +160,7 @@ class WaveletMath {
    *                     elements.
    * @see PaddingMode
    */
-  static void Pad(const std::vector<double>* data,
+  static void Pad(const std::vector<double>& data,
                   std::vector<double>* extended_data, size_t pad_left,
                   size_t pad_right, PaddingMode padding_mode);
 };
